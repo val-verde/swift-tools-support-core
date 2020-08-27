@@ -95,7 +95,7 @@ let package = Package(
       .define("_CRT_SECURE_NO_WARNINGS", .when(platforms: [.windows])),
     ]
     TSCBasic.linkerSettings = [
-      .linkedLibrary("Pathcch", .when(platforms: [.windows])),
+      .linkedLibrary("windowsapp", .when(platforms: [.windows])),
     ]
   }
 #endif
