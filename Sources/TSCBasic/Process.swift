@@ -395,7 +395,10 @@ public final class Process: ObjectIdentifierProtocol {
             throw Process.Error.missingExecutableProgram(program: executable)
         }
 
-    #if os(Windows)
+    #if DISABLE_POSIX_SPAWNP
+        preconditionFailure("POSIX spawnp not available on this system.")
+    #else
+      #if os(Windows)
         _process = Foundation.Process()
         _process?.arguments = Array(arguments.dropFirst()) // Avoid including the executable URL twice.
         _process?.executableURL = executablePath.asURL
@@ -671,6 +674,7 @@ public final class Process: ObjectIdentifierProtocol {
 
         return stdinStream
     #endif // POSIX implementation
+    #endif // DISABLE_POSIX_SPAWNP
     }
 
     /// Blocks the calling process until the subprocess finishes execution.
