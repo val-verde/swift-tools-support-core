@@ -137,7 +137,7 @@ public struct AbsolutePath: Hashable {
     /// True if the path is the root directory.
     public var isRoot: Bool {
 #if os(Windows)
-        return _impl.string.withCString(encodedAs: UTF16.self, PathCchIsRoot)
+        return _impl.string.withCString(encodedAs: UTF16.self, PathCchIsRoot) != 0
 #else
         return _impl == PathImpl.root
 #endif
@@ -446,7 +446,7 @@ private struct UNIXPath: Path {
 
 #if os(Windows)
     static func isAbsolutePath(_ path: String) -> Bool {
-        return !path.withCString(encodedAs: UTF16.self, PathIsRelativeW)
+        return path.withCString(encodedAs: UTF16.self, PathIsRelativeW) == 0
     }
 #endif
 
@@ -767,7 +767,7 @@ private struct UNIXPath: Path {
         var result: PWSTR?
         _ = string.withCString(encodedAs: UTF16.self) { root in
             name.withCString(encodedAs: UTF16.self) { path in
-                PathAllocCombine(root, path, ULONG(PATHCCH_ALLOW_LONG_PATHS.rawValue), &result)
+                PathAllocCombine(root, path, ULONG(PATHCCH_ALLOW_LONG_PATHS), &result)
             }
         }
         defer { LocalFree(result) }
@@ -798,7 +798,7 @@ private struct UNIXPath: Path {
         var result: PWSTR?
         _ = string.withCString(encodedAs: UTF16.self) { root in
             relativePath.string.withCString(encodedAs: UTF16.self) { path in
-                PathAllocCombine(root, path, ULONG(PATHCCH_ALLOW_LONG_PATHS.rawValue), &result)
+                PathAllocCombine(root, path, ULONG(PATHCCH_ALLOW_LONG_PATHS), &result)
             }
         }
         defer { LocalFree(result) }

@@ -11,6 +11,11 @@
 import Foundation
 import TSCLibc
 
+#if os(Windows)
+internal let GENERIC_READ = UInt32(0x80000000)
+internal let GENERIC_WRITE = UInt32(0x40000000)
+#endif
+
 /// A simple lock wrapper.
 public struct Lock {
     private let _lock = NSLock()
@@ -100,13 +105,13 @@ public final class FileLock {
         overlapped.hEvent = nil
         switch type {
         case .exclusive:
-            if !LockFileEx(handle, DWORD(LOCKFILE_EXCLUSIVE_LOCK), 0,
-                           UInt32.max, UInt32.max, &overlapped) {
+            if LockFileEx(handle, DWORD(LOCKFILE_EXCLUSIVE_LOCK), 0,
+                          UInt32.max, UInt32.max, &overlapped) == 0 {
                 throw ProcessLockError.unableToAquireLock(errno: Int32(GetLastError()))
             }
         case .shared:
-            if !LockFileEx(handle, 0, 0,
-                           UInt32.max, UInt32.max, &overlapped) {
+            if LockFileEx(handle, 0, 0,
+                          UInt32.max, UInt32.max, &overlapped) == 0 {
                 throw ProcessLockError.unableToAquireLock(errno: Int32(GetLastError()))
             }
         }

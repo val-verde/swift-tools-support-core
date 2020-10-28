@@ -28,7 +28,7 @@ public enum ProcessEnv {
       #if os(Windows)
         guard key.withCString(encodedAs: UTF16.self, { keyStr in
             value.withCString(encodedAs: UTF16.self) { valStr in
-                SetEnvironmentVariableW(keyStr, valStr)
+                SetEnvironmentVariableW(keyStr, valStr) != 0
             }
         }) else {
             throw SystemError.setenv(Int32(GetLastError()), key)
@@ -45,7 +45,7 @@ public enum ProcessEnv {
     public static func unsetVar(_ key: String) throws {
       #if os(Windows)
         guard key.withCString(encodedAs: UTF16.self, { keyStr in
-            SetEnvironmentVariableW(keyStr, nil)
+            SetEnvironmentVariableW(keyStr, nil) != 0
         }) else {
             throw SystemError.unsetenv(Int32(GetLastError()), key)
         }
@@ -77,7 +77,7 @@ public enum ProcessEnv {
         let path = path.pathString
       #if os(Windows)
         guard path.withCString(encodedAs: UTF16.self, {
-            SetCurrentDirectoryW($0)
+            SetCurrentDirectoryW($0) != 0
         }) else {
             throw SystemError.chdir(Int32(GetLastError()), path)
         }
