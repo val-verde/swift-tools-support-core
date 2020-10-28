@@ -13,6 +13,7 @@
 #elseif os(Windows)
 @_exported import CRT
 @_exported import WinSDK
+internal let _SH_DENYNO = Int32(0x40)
 #else
 @_exported import Darwin.C
 #endif
