@@ -97,10 +97,10 @@ public final class TerminalController {
         var dwMode: DWORD = 0
 
         guard hOut != INVALID_HANDLE_VALUE else { return nil }
-        guard GetConsoleMode(hOut, &dwMode) else { return nil }
+        guard GetConsoleMode(hOut, &dwMode) != 0 else { return nil }
 
         dwMode |= DWORD(ENABLE_VIRTUAL_TERMINAL_PROCESSING)
-        guard SetConsoleMode(hOut, dwMode) else { return nil }
+        guard SetConsoleMode(hOut, dwMode) != 0 else { return nil }
 #endif
         self.stream = stream
     }
@@ -130,7 +130,7 @@ public final class TerminalController {
     public static func terminalWidth() -> Int? {
 #if os(Windows)
         var csbi: CONSOLE_SCREEN_BUFFER_INFO = CONSOLE_SCREEN_BUFFER_INFO()
-        if !GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi) {
+        if GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi) == 0 {
           // GetLastError()
           return nil
         }

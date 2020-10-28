@@ -28,7 +28,7 @@ public final class InterruptHandler {
     /// The thread which waits to be notified when a signal is received.
     let thread: Thread
   #if os(Windows)
-    let signalHandler: @convention(c)(UInt32) -> WindowsBool
+    let signalHandler: @convention(c)(UInt32) -> Int32
   #else
     let signalHandler: @convention(c)(Int32) -> Void
   #endif
@@ -46,17 +46,17 @@ public final class InterruptHandler {
           #if os(Windows)
             var bytesWritten: DWORD = 0
             WriteFile(signalWatchingPipe[1], &byte, 1, &bytesWritten, nil)
-            return true
+            return 1
           #else
             write(signalWatchingPipe[1], &byte, 1)
           #endif
         }
       #if os(Windows)
-        SetConsoleCtrlHandler(signalHandler, true)
+        SetConsoleCtrlHandler(signalHandler, 1)
 
         var readPipe: HANDLE?
         var writePipe: HANDLE?
-        let rv = CreatePipe(&readPipe, &writePipe, nil, 1)
+        let rv = CreatePipe(&readPipe, &writePipe, nil, 1) != 0
         signalWatchingPipe = [readPipe!, writePipe!]
         guard rv else {
             throw SystemError.pipe(Int32(GetLastError()))
@@ -116,7 +116,7 @@ public final class InterruptHandler {
 
     deinit {
       #if os(Windows)
-        SetConsoleCtrlHandler(signalHandler, false)
+        SetConsoleCtrlHandler(signalHandler, 0)
         CloseHandle(signalWatchingPipe[1])
       #else
         // Restore the old action and close the write end of pipe.
