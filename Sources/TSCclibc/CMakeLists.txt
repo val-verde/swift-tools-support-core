@@ -13,7 +13,9 @@ target_include_directories(TSCclibc PUBLIC
 
 if(NOT BUILD_SHARED_LIBS)
   install(TARGETS TSCclibc
-    ARCHIVE DESTINATION lib)
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin)
 endif()
 
 set_property(GLOBAL APPEND PROPERTY TSC_EXPORTS TSCclibc)
