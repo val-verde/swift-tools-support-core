@@ -60,6 +60,12 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
       FoundationNetworking)
   endif()
 endif()
+if(CMAKE_SYSTEM_NAME STREQUAL Windows)
+install(TARGETS TSCUtility
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+endif()
 # NOTE(compnerd) workaround for CMake not setting up include flags yet
 set_target_properties(TSCUtility PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_Swift_MODULE_DIRECTORY})
