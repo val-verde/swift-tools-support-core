@@ -67,6 +67,8 @@ public final class InterruptHandler {
         action.__sigaction_u.__sa_handler = signalHandler
       #elseif os(Android)
         action.sa_handler = signalHandler
+      #elseif os(Musl)
+        action.__sa_handler.sa_handler = signalHandler
       #else
         action.__sigaction_handler = unsafeBitCast(
             signalHandler,
