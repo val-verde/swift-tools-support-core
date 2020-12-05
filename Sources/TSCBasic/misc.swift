@@ -192,14 +192,14 @@ extension SystemError: CustomStringConvertible {
             while cap <= 16 * 1024 {
                 var buf = [Int8](repeating: 0, count: cap)
                 let err = TSCLibc.strerror_r(errno, &buf, buf.count)
-                if err == EINVAL {
+                if errno == EINVAL {
                     return "Unknown error \(errno)"
                 }
-                if err == ERANGE {
+                if errno == ERANGE {
                     cap *= 2
                     continue
                 }
-                if err != 0 {
+                if errno != 0 {
                     fatalError("strerror_r error: \(err)")
                 }
                 return "\(String(cString: buf)) (\(errno))"

@@ -428,7 +428,7 @@ public final class Inotify {
 // FIXME: <rdar://problem/45794219> Swift should provide shims for FD_ macros
 
 private func FD_ZERO(_ set: inout fd_set) {
-    #if os(Android)
+    #if os(Android) || os(Musl)
         #if arch(arm)
             set.fds_bits = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -448,7 +448,7 @@ private func FD_ZERO(_ set: inout fd_set) {
 private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
     let intOffset = Int(fd / 16)
     let bitOffset = Int(fd % 16)
-  #if os(Android)
+  #if os(Android) || os(Musl)
     var fd_bits = set.fds_bits
     let mask: UInt = 1 << bitOffset
   #else
@@ -492,7 +492,7 @@ private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
 	#endif
         default: break
     }
-  #if os(Android)
+  #if os(Android) || os(Musl)
     set.fds_bits = fd_bits
   #else
     set.__fds_bits = fd_bits
@@ -502,7 +502,7 @@ private func FD_SET(_ fd: Int32, _ set: inout fd_set) {
 private func FD_ISSET(_ fd: Int32, _ set: inout fd_set) -> Bool {
     let intOffset = Int(fd / 32)
     let bitOffset = Int(fd % 32)
-  #if os(Android)
+  #if os(Android) || os(Musl)
     let fd_bits = set.fds_bits
     let mask: UInt = 1 << bitOffset
   #else

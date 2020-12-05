@@ -62,7 +62,7 @@ public struct DLOpenFlags: RawRepresentable, OptionSet {
     public static let deepBind: DLOpenFlags = DLOpenFlags(rawValue: 0)
   #else
     public static let first: DLOpenFlags = DLOpenFlags(rawValue: 0)
-  #if !os(Android)
+  #if !os(Android) && !os(Musl)
     public static let deepBind: DLOpenFlags = DLOpenFlags(rawValue: RTLD_DEEPBIND)
   #endif
   #endif

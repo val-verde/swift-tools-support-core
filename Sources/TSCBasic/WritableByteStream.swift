@@ -668,9 +668,14 @@ public class FileOutputByteStream: _WritableByteStreamBase {
 
 /// Implements file output stream for local file system.
 public final class LocalFileOutputByteStream: FileOutputByteStream {
+#if os(Android) || os(Musl)
+    public typealias FilePointer = OpaquePointer
+#else
+    public typealias FilePointer = UnsafeMutablePointer<FILE>
+#endif
 
     /// The pointer to the file.
-    let filePointer: UnsafeMutablePointer<FILE>
+    let filePointer: FilePointer
 
     /// Set to an error value if there were any IO error during writing.
     private var error: FileSystemError?
@@ -682,7 +687,7 @@ public final class LocalFileOutputByteStream: FileOutputByteStream {
     private let path: AbsolutePath?
 
     /// Instantiate using the file pointer.
-    public init(filePointer: UnsafeMutablePointer<FILE>, closeOnDeinit: Bool = true, buffered: Bool = true) throws {
+    public init(filePointer: FilePointer, closeOnDeinit: Bool = true, buffered: Bool = true) throws {
         self.filePointer = filePointer
         self.closeOnDeinit = closeOnDeinit
         self.path = nil
