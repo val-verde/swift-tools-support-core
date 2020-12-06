@@ -64,6 +64,7 @@ public struct Triple: Encodable, Equatable {
     public enum ABI: String, Encodable {
         case unknown
         case android
+        case musl
     }
 
     public init(_ string: String) throws {
@@ -104,6 +105,9 @@ public struct Triple: Encodable, Equatable {
         if string.hasPrefix(ABI.android.rawValue) {
             return ABI.android
         }
+        if string.hasPrefix(ABI.musl.rawValue) {
+            return ABI.musl
+        }
         return nil
     }
 
@@ -117,6 +121,10 @@ public struct Triple: Encodable, Equatable {
 
     public func isLinux() -> Bool {
         return os == .linux
+    }
+
+    public func isMusl() -> Bool {
+        return os == .linux && abi == .musl
     }
 
     public func isWindows() -> Bool {

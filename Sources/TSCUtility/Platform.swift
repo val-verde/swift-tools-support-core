@@ -16,6 +16,7 @@ public enum Platform: Equatable {
     case android
     case darwin
     case linux(LinuxFlavor)
+    case musl
     case windows
 
     /// Recognized flavors of linux.
