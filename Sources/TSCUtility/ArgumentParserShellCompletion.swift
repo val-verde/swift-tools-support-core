@@ -11,6 +11,10 @@
 import Foundation
 import TSCBasic
 
+#if canImport(WinSDK)
+import WinSDK
+#endif
+
 fileprivate let removeDefaultRegex = try! NSRegularExpression(pattern: "\\[default: .+?\\]", options: [])
 
 // deprecated 2/2021
