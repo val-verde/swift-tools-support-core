@@ -49,8 +49,11 @@ target_link_libraries(TSCUtility PUBLIC
   TSCBasic)
 target_link_libraries(TSCUtility PRIVATE
   TSCclibc
-  ${CMAKE_DL_LIBS}
+  ${CMAKE_DL_LIBS})
+if(NOT ANDROID)
+target_link_libraries(TSCUtility PRIVATE
   Threads::Threads)
+endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
   if(CMAKE_SYSTEM_NAME STREQUAL OpenBSD)

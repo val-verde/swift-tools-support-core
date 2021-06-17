@@ -25,7 +25,9 @@ option(BUILD_SHARED_LIBS "Build shared libraries by default" YES)
 
 find_package(dispatch QUIET)
 find_package(Foundation QUIET)
+if(NOT ANDROID)
 find_package(Threads QUIET)
+endif()
 find_package(SQLite3 REQUIRED)
 
 add_subdirectory(Sources)
